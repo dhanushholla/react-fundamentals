@@ -17,6 +17,11 @@ import Inline from './component/inline';
 import './appStyles.css'
 import styles from './appStyles.module.css'
 import Form from './component/form';
+import LifecycleA from './component/LifecycleA';
+import Fragmentdemo from './component/Fragmentdemo';
+import Table from './component/Table';
+import { PureComponent } from 'react';
+import Parentcomp from './component/Parentcomp';
 //import Greet from './component/Greet'; normal import for default export
 // import Greetcomponent from './component/Greet'; different name import for default export
 function App() {
@@ -49,7 +54,11 @@ function App() {
       <Inline></Inline> */}
       {/* <h1 className='error'>error by cssstylesheet - appStyles.css</h1>
       <h1 className={styles.success}> success -appStyles.module.css</h1> */}
-      <Form></Form>
+      {/* <Form></Form> */}
+      {/* <LifecycleA/> */}
+      {/* <Fragmentdemo></Fragmentdemo> */}
+      {/* <Table></Table> */}
+      <Parentcomp></Parentcomp>
     </div>
   );
 }

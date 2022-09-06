@@ -239,3 +239,159 @@ vid-21:
 
 vid-22:
     Component lifecycle methods
+    stages in lifecycle... methods at these stages are called lifecycle methods which opts you to change the behaviour or UI if needed
+    these lifecycle hooks/methods are mostly for the class component..where as for sfc there is useeffect hook similar to these lifecycle hook somewhat
+
+    LIFECYCLE METHODS IN CLASS COMPONENT:
+        TYPES:
+            1 Mounting ->called .. when an instance of component is being created and inserted into the DOM
+            2 Updating ->called .. when a component is being re-rendered as a result of changes made to either props or states
+            3 Unmounting -> called .. when a component is being removed from DOM
+            4 Error handling -> called ..when there is an error during rendering, in a lifecyle method or in constructor of any child component
+
+        mounting has methods like
+            constructor, static getDerviedStateFromProps, render , componentDidMount
+        
+        updating phase has methods like
+            static getDerivedStateFromProps, shouldComponentUpdate, render, getSnapshotBeforeUpdate, componentDidUpdate
+
+        unmounting phase has methods like
+            componentWillUnmount
+        
+        error handling phase has methods like   
+            static getDerivedStateFromError and componentDidCatch
+
+vid-23:
+    Mounting lifecycle methods (flow)
+           1)constructor :
+                constructor(props)
+                    usage:
+                        it is a special function that will get called whenever a new component is created
+                        it can be used for initialzing the state,binding the event handlers
+                        we should not cause any sideeffect like making HTTP/AJAX requests here
+                        while using constructor the super(props) must be called  and it is the only place where direct changing of state variables allowed without using the setState()
+
+            2)static getDerivedStateFromProps(props,state): 
+                    it is a static methods
+                    classified as rarely used lifecycle method
+                    usage:
+                        when the state of our component depends on the changes made in props over time.. similar to controlled component but not restricted to it,
+                        then in those cases we can use this to set the state of the component..as this is a static method.. 'this' keyword and this.setState can't be used here
+                        so there we have to return a object that represents the new state of the component
+                         we should not cause any sideeffect like making HTTP/AJAX requests here 
+
+            3)render():
+                it is required/must function in the class component
+                it may/not read and use the props&state and returns the JSX/reactelement
+                it is a pure function..it ensures to act same and produce UI for given state/props
+                we should not change state here and we shouldn't interact with DOM and we shouldn't make ajax calls
+                since the parent render() has the children component as the returning jsx..thus the children component lifecylce methods are also executed.
+
+            4)componentDidMount(): 
+                this will be called only once in the whole lifecycle of the considered component
+                it is invoked immediately after the component and all of its child components are rendered to the DOM
+                here we can cause/do the side effects like interacting with the DOM or calling AJAX/HTTP requests to load data
+
+    now let's code:
+        new file->lifecycleA.js and lifecycleB.js
+    here we could see after A's render..child B's render happens..thenafter only all the componentdidmount happens
+
+vid-24:
+    Updating phase lifecycle methods
+        1) static getDerivedStateFromProps(props,state):RARE
+                static method that has to return either updated state as object or null
+                it is called everytime whenever  a component is re-rendered
+                sets the state
+                must not cause any side effects
+        
+        2) shouldComponentUpdate(nextProps,nextState):RARE
+                it recieves the updated props and state
+                it decides whether the component has to re-render or not
+                by default, all the class components re-render whenever the props/state they recieve is changed
+                compare old and new state,prop value and return bool to determine whether react should update or not
+                must not cause any side-effects
+                must notuse setState()
+
+        3)render():
+                it is required/must function in the class component
+                it may/not read and use the props&state and returns the JSX/reactelement
+                it is a pure function..it ensures to act same and produce UI for given state/props
+                we should not change state here and we shouldn't interact with DOM and we shouldn't make ajax calls
+                since the parent render() has the children component as the returning jsx..thus the children component lifecylce methods are also executed.
+
+        4)getSnapshotBeforeUpdate(prevProps,PrevState):RARE
+                it is called right before the changes in the virtual dom to be reflected in the real dom
+                used to capture some informations from the dom
+                for eg:
+                    read user scroll position and after the update it must relocate the screen to the previous screen coordinate by some calculation
+                it will return either null or a value
+                returned value will be passed as third arg to the componentDidUpdate()
+
+        5)componentDidUpdate(prevProps,PrevState,snapshot):
+                it is called after the render() in the re-render cycles
+                which ensures that both component and it's child components would be updated.
+                it is gauranteed it would be called once for each re-render cycle
+                here we can perform the side effects...based on whether needed or not on th basis of snapshot& prevProps,PrevState
+
+        using the same lifecycleA,lifecycleB files here.
+    
+    Unmounting phase lifecycle methods:
+        1) componentWillUnmount():
+                it is invoked when a component is unmounted and destroyed
+                we can do cancelling any network request,removing event handlers,cancelling any subscriptions and also invalidating timers
+                we can't use setState() here
+    
+    Error handling phase lifecycle methods:
+        1) static getDerivedStateFromError(error):
+        2) componentDidCatch(error,info):
+        will refer in the error-boundary video, these methods are caled when there is a  error in rendering a lifecycle method in component or in constructor or in any child component
+
+
+vid-25:
+    Fragments
+    this lets you to group the set of children without adding extra node to the dom
+    fragmentdemo.js -- for basic eg
+    multiple elements returned using render() the insetad of adding wrapper div we can opt React.Fragment
+    create table.js and columns.js
+    fragments can accpet the key value while rendering the list of items
+    <> 
+    </>
+    empty opening and closing tags are also similar to react.fragment but we can't pass keywhile using this
+
+vid-26:
+    Pure components
+    these all times we created class component by extending component class syntax
+    ther is an another way to do class component creation via extemding purecomponent 
+    shortcut to create purecomponent : rpce 
+    file purecomp.js,regcomp.js,parentcomp.js
+    component class vs pure component class ?
+    we gonna do it with a demo by having a purecomponent,normal component and parent to both capable of changing its state
+    //here the componentdidmount will execute after the first render then inside it..logic calls the setstate method for every 2 secons which causes the parent component rendering which in turn re-renders it's child 
+    //regular component gets re-rendering along with the setinterval() but the purecomponent doesn't  
+
+    it is because:
+            a regular component does not implement the shouldComponentUpdate method. it always return true for updating by default
+            a pure component implement shouldComponentUpdate with a shallow props and state comparison
+
+    shallow comparison(SC):
+            for primitive types like numbers,string etc
+                a (SC) b returns true if a and b have same value and are of the same type
+            for complex type like arrays,objects etc..
+                a (SC) b returns true if a and b reference the exact same object 
+                eg:
+                    var a=[1,2]
+                    var b=[1,2]
+                    var c = a 
+                    //here SC is nothing but ===
+                    a === b --> returns false
+                    a === c --> returns true   
+                    b === c --> returns false
+                    because as c is formed by a it is refers to the same object.it also stands same for objects
+            
+        a pure component implements shouldComponentUpdate with a shallow prop and state comparison
+
+ does       sc of prevState with currentState    
+ does       sc of prevProps with currentProps
+
+if found changes in it then only re-render the component
+note: never mutate the state.. always return a new object that reflects the new state while using pure component
