@@ -1,0 +1,241 @@
+react:
+
+vid-1:
+    frontend library for rich UI
+    component based architecture
+    react is declarative
+    takes care of DOM updates
+    react-native-> mbile app dev
+
+also checkout on es6 playlist by codeevolution
+
+vid-2:
+    hello world
+    install node.
+    create-react-app cli tool=> to create and run a simple react app
+    npx create-react-app nameofproject
+    cd projectname ie cd hello-world
+    npm start
+
+alternate method to create react app:
+    npx --> it is a npm package runner 
+    npmx create-react-app projectname
+                or
+    by npm:
+        npm install create-react-app -g
+        create-react-app projectname
+
+vid-3:
+    file/folder structure
+    package.json has dependencies and scripts for the applications
+    nodemodule dir has all the dependencies code files
+    public dir has 3 files, manifest.json is for progressive webapp,favicon is like logo,index.html is main html file which has a div tag with id root, on runtime react takes this div as wrapper and populates its components in it
+    src dir is the source.  index.js -> here we specify the root component which is App and followed by DOM element controlled by react inside reactDOM.render(<App/>,document.getElementbyid('root'))
+    app.js is now here the file with render() that makes what to be displayed in the root div element on this stage
+    app.css ->corresponding css for app component
+    app.test.js -> unit testfile for app component
+    index.css-> css file for index.html 
+    serviceworker -> it is for PWA react applications
+
+vid-4:
+    component - part of UI
+    a component could be defined using a .js or .jsx file
+    component type : functional/stateless component , class component
+    SFC: normal js/jsx functions that returns either  ahtml/jsx format ui  .. doesn't have state 
+    class component: normal ES6 class with state,render() etc..
+    course instructor's app.js -> class component
+    for me -> functional component here
+
+vid-5:
+    just js function that might get props as args and might returns html/jsx
+    so now under src create component dir and under it create a file named greet.js which would be functional component now
+    in app.js-> clear out everything under render()/return outerdiv
+    make defn in greet.js and export it and then move to app.js and import it and under render()/div put the component name ie exported name Greet here
+    making use of default export allows us to make import with any name of desire we want
+    note: Component name must always start with capital letter -- rule
+    name export is also a type of export used. 
+    ie when  export  const Greet = () => return <h1>Hello </h1> we must try it to import on other file with same name Greet in our case now
+    during such name export and import.. we must import it like import {Greet} from 'path'
+
+vid-6:
+    class component 
+    ES6 classes it can also recieve props as args and also capable to maintain private internal state
+    so create welcome.js under component which involves importing react and component class from react package
+    do the export and import respectively
+    sfc vs class component: 
+            sfc-> simple functions, absence of 'this' keyword and scope issue, soln without state think approach,called dumb/presentational component
+            class-> has state,has lifecycle hooks, comple ui logic implementable, called as smart/container components
+
+vid-7:
+    react 16.7.0 contradicts what we know about sfc vs class
+    but now hooks are features that allow us to use state and other things without writing a class
+
+vid-8:
+    jsx
+    javascriptXML --> allow to write xml like js code thus allows to have tag name,attributes,children
+    now going to write a sfc that allows us to create UI without jsx
+    hello.js under components dir
+    React.createElement('div',null,React.createElement('h1',null,'hello Dhanush without jsx'));// here react.createelemt(elementtypetobecreated/tag,properties/attributeoftag,childrentag/innertext) note that react.creaetelement accepts any no of children tag
+    here the second args ie null is nothing but an object with key value pair lik {id:'hello div id'}
+    ie each time whenever we use jsx expression for return an implicit call is made using react.createelement() which returns an react element 
+    in jsx some changes in the attributes is odne like
+      class -> className
+      for ->htmlFor
+      onclick -> onClick
+      tabindex-> tabIndex etc...
+
+vid-9:
+    props   
+    allows the component to be dynamic and serves like optional input/args to component
+    assume we have to pass name from App to Namegreet component which greets the entered name
+    here the name="" is the thing seen to be passed by App to the component Namegreet thus inside nameGreet it must be accessed by this.props.name where this point to namegreet and props.name meant as this sent by APP which is name  
+    assume now we don't know what are the things passed as props then we can use the children props concept ie the value inside the opening and closing tag of the component
+    usually in react js we can return only one statement .. so to return multiple statement we've to wrap them inside a div tag
+    props are immutable by default..ie their value can't be changed
+
+vid-10:
+    state & props
+    we can use the state to influence what to be rendered if we opt out props
+    props vs state:
+        props get passed to component, these are usually termed to be used as functional parameters,props are immutable(can't be chnaged by child), accessed using props(in sfc) and this.props(in class component),
+        state is managed within and by a component,these are variables inside the fn body/class , state are mutable by the component it is own by..  accessed by UseState Hook(in sfc) and this.state(in class component)
+    using state to be influence UI by class component
+    create message.js under component and made the changes
+    assume we create a button there which on click makes message to change as from "welcome visitor" to "thank you for subscribing"
+    here we can't pass that message as props(immutable) thus toggle value based on button click won't be applicable
+    so we gonna use the state here for achieveing this
+    we wrote the event handler onclick to point a fn which inturn calls the setstate() to change the state.messagevalue and reflects it in virtual and realdom
+    //always use setState() to changes the state of a component...direct change without the setState() will change vlue internally but not reflected in DOMS
+
+vid-11:
+    setstate()
+    ES7 react snippet extension
+    lets create counter component
+    rconst is the shortcut keyword to generate class component constructor
+    put increment,decrement button with appr.method calls to do the funcytionality via setstate()
+    always use setstate() if you need to change the state 
+    don't place the code which are dependent on state under state modifying setState() calls..better proceed with setState(obj,callback) where callback is the remaining things to be done using modified state values...this avoids async difficulties
+    imp.point:
+        always make use of setstate and never modify the state directly
+        code has to be execute after the state has been updated?
+            then place that code in callback fn which is second args to setState()
+        when you have to update state based on previous state value,pass in a function as argument(prevstate,props) instead of regular object to setState().
+
+
+vid -12:
+    destructuring state and props.
+    destructuring is an ES6 feature that enable you to take out specific value from arrays/obj.properties into individual variables/elements
+    thus it increases code readability.
+    for eg in our case.. go to namegreet.js where we opt to use props.name,props.children, props.relation in sfc we could do it as ..see in the file.
+    now we going to opt that for class component in same namegreet.js
+
+VID-13:
+    event handling
+    assuming click event to understand the event handling 
+     lets create a functional component as functionclick.js
+    note always eventhandler=value .. the value must be of function/functionreferencor not as functioncall.
+    like onClick={handle} .. not as onClick={handle()}
+    for the same event handling in class component..see class-click.js
+    rce-shortcut of es7 to create class component
+
+vid-14:
+    binding event handlers--(usually event handlers tend to odify state of class using this.setState() whenever an event occurs)
+    there handling would be difficult as the 'this' context binding is hard to understand and bind.
+    binding of the event handlers is just due to the difficulty of 'this' not because of any react practice
+    we aim to change message on the click of a button where the message is a part of component's state
+    created a file named eventbind.js as a class component
+    methods:
+       changes in render(): make binding in the eventhandler=value.bind(this)
+        changes in render(): making use of arrow fn --> eventhandler={()=>handlerfn()}
+        changes in constructor :making the binding in the constructor itself
+        changes in class property  array fn assign to variable :making handler value fn itself as a variable assigned to an arrowfn that makes changes. class property as arrow fn
+
+vid-15:
+    methods as props
+    child component wanted to communicate with parent component..then also we choose for props
+    we pass a reference to a method as a prop to the child component
+    create parentcomponent.js and childcomponent.js and do the necessary
+    first normal child calls parent's greet()
+    next child going to give a name that changes greet followed by name accordingly
+    to pass method as props:
+            define a method in parent component
+            send that as props to child Component in format as handlername={parent-method-name}
+            in the childcomponent, do the onclick=prop.handlername(args) ...
+
+vid-16:
+    conditional rendering
+    types:
+        if/else
+        element variables
+        ternary conditional operator
+        short circuit operator
+    new file->usergreeting.js
+
+
+vid-17:
+    list rendering
+    we can use the map() to make use of iterating over array
+    used the map() to call the adding of personcomponent which in turn call to add the h2 tags with the passed prop detais for displaying.. but when we see the console
+    we get error but with correct rendering.. the error is nothing but "each child in the array or iterator must have an unique key prop"
+
+vid-18:
+    lists and keys
+    the error in vid 17 could be considered as each item in the array(persons/personlist) must have an prop called 'key' and it must be unique
+    so lets add it in the same files
+    key props are not accessible in the child component..eg when we try to access it in personcomponent in case
+    ie key props are reserved for the parent props alone
+    key helps react to identify the things that are changed in the list implicitly
+    assume  
+            list :
+                old list    new list
+                    a           a
+                    b           b
+                                c 
+        then react compares old tree dom with new tree dom side by side and finds out element c is missing then it merges it out and forms the olddom tree with a newly added element
+        the issue comes when the list is like
+                old list    new list
+                    a           c
+                    b           a
+                                b
+    here it finds out the first element mismatch and second element mistmatch..assume whole tree is new and starts to create everything from scratch for the new dom
+    but simply it could keep a,b alone and fix the new element c and order of them..this could be achieved without hassle if the key prop is used
+
+vid-19:
+    index as key anti-pattern
+    assume there is a list to be rendered from array(simple one) which may not have id/any unique parameter to serve as key prop..then what should be done on that case
+    we could use the index of the element as the key prop
+    but using index as key prop might also cause serious issues in terms of ui
+    find attached link in video for reference
+    where we have 4 buttons..add new to start,addnew to end, sort by earliest,sort by latest
+    we have items with.. index, id, item description,created time
+    adding to end of list was no problem..but but but when we try to add value to start then it's index should be zero and other items indexes must be modified accordingly but current item id must be increment
+    the issue comes when index,id worked properly,..but the content of each items weren't shifted accordingly
+    so see the video for more clarity..
+    only use the index as keyonly  when it satisifes all 3 below:
+            when list don't have unique id
+            static list... not on crud based operations to be performed on list that changes ui
+            list that never be sorted/filtered
+
+vid-20:
+    styling for react component-basics
+       1 css --> made use of the mystyle.js and stylesheet.js
+       2 inlne styling --> made use of inline.js
+       3 css modules --> available with react scripts version 2(create-react-app)
+       4 css in Js libraries-style component(refer somewhere else)
+       now created stylesheet.js  and mystyle.css and inline.js
+       for css modules based styling:
+                    we must create the file with name format suffixed with module.css,
+                    like within src we gonna create 2 stylesheets like appStyles.css and appStyles.module.css and included them into appcomponent
+                    as the appStyles.css is applied to appcomponent via import..then it is applicable to child components of app component
+                    ie you can copy the <h1 className='error'>error by cssstylesheet - appStyles.css</h1> and put it inside inline.js.. it would work and give inline in red color as mentioned
+                    but appStyles.module.css is not applicable to the child components of the app component as it was imported there alone
+
+vid-21:
+        basic form handling in react
+        capture input for various tag and have data available on for submission
+        in html..elements are resposnible on their own for the form input handling..but what we want is the react to handle them.
+        elements whose values are controlled by react is called controlled components
+        form.js
+
+vid-22:
+    Component lifecycle methods
