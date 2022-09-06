@@ -1,0 +1,13 @@
+.primary{
+    color:orange;
+}
+
+.secondary{
+    color:aqua;
+}
+
+.bigfont{
+    font-size: 100px;
+    font-style: italic;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
