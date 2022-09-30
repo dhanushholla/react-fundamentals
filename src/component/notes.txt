@@ -395,3 +395,252 @@ vid-26:
 
 if found changes in it then only re-render the component
 note: never mutate the state.. always return a new object that reflects the new state while using pure component
+
+vid 27 - memo:
+    wkt purecomponents are for class components but to achieve the same with the functional components we gonna use React.memo
+   parentcomp.js is also used & new file : Memocomp.js
+   to make a component to behave as memo 
+   use export default React.memo(our-componentname)
+
+vid 28 - Refs:
+    REFS ARE FOR CLASS COMPONENTS AND CANNOT BE ATTACHED FOR FUNCTIONAL COMPONENT AS IN UPCOMING VID 29
+    refs / references makes it possible to access the DOM elements directly into the react
+    we gonna like focusing a text input  field as usecase here...
+    new file: refsdemo.js
+    to use refs:
+            steps:
+                1) create a ref inside constructor by react.createRef()
+                2) attach ref to needed dom element and it is done by using reserved ref attribute
+                3)calling this.ourrefname.current.focus() -- for this usecase
+
+    we gonna use the ref for the another usecase of fetching the input
+    in the same file we gonna make changes
+
+    we can also createrefs using a method called callback ref creation
+    (bit older approach)
+    steps:
+            1) createref  and assign the value of property as null
+            2) create a method that assignes the DOM element to the ref we created on step 1
+            3)assign ref={ourrefsettermethod} in the dom element here the DOM element is implicitly passed as the element to setcbref
+            note: REACT WILL CALL THE REF TO THE CALLBACK WITH DOM ELEMENT WHEN THE COMPONENTDIDMOUNTS AND CALLBACK THE REF WITH VALUE AS NULL WHEN COMPONENTUNMOUNTS
+            4)add the focus to ref for this usecase
+
+vid 29 - ref with class components:
+        it is also possible to add ref to the whole class component itself
+        new file:input.js & parentcomponent->focusinput.js
+         assume here when btn is clicked here then the child component input.js will have to call focusinputfield() which inturn makes focus on the input field 
+        we have created the ref in parent class and assigned the ref to the child class thus now we can access the child methods & properties via the ref name
+        we have a button which when clicked calls the method clickhandle where we gonna access the child method focusinputfield() using componentref we created, which inturn calls the  focus statement
+
+VID 30 - forwarding refs:
+    ref forwarding is a technique to automatically pass a ref throught a component to one of its children
+    newfile : FRinput.js(SFC TYPE),FRparentinput.js(CC TYPE)
+    here when we click the button on parent comp then the input field on child component must recieve focus
+    lets see how to do it now using ref forwarding
+    step:
+        1 create a ref in parent component
+        2 attach ref to child component using ref attribute
+        3 fowarding the ref to the inputfield in the child component using forwardRef() from react library--> rewrite the sfc as arrow fn and react.forwardRef assignment where the fowrward ref takes a arg which is nothing but our new sfc arrow fn
+        wkt  sfc recieves props as its parameter but when the sfc is passed as arg to an forward ref then the same sfc recieves the ref as second parameter
+        4 add handler fn for button click to call focus
+
+vid 31 - portals:
+    react portals provides a way to render children into a DOM node that exists outside the DOM hierarchy of the parent component 
+    ie so far we had one dom element ie a div with id="root" in index.html were we've been mounting app.js which inturn is our whole react app
+    ie it is also seen in index.js where we wrote reactdom.render(<app/>,document.getElementbyid("root"))
+    here the protals allows you to create the react sub-app// our desired code to be rendered not under the div with id root this is called breaking parent hierarchy
+
+    lets see with example
+    lets add a dom node/element that falls outside  the root element
+    in public/index.html .. we gonna add a div with id="portal-root"
+    now  create  a new component: portaldemo.js
+    in portal demo.js,
+            we gonna return the reactdom.createportal() where it takes two params, jsx/components to be rendered and dom node where we need this app to be mount
+    now when you inspect and see the hirarchy is not under root but under the portal-root div ... ie broke the app hiearachy that portals are aimed for
+
+   why do we need portals:
+     one case is having to deal with parent component css  when child component is a modal,popup, tooltip etc..
+      to understand it please visit @ https://codesandbox.io/s/00254q4n6p
+       
+    
+    event bubbling in portals: eventhough the child can be anywhere in the dom tree..ie including breaking app hiearchy .. but when event happens or its functionality is similar to a normal child
+    ie event fired from inside a portal will propagate to ancestors in the contaiing react tree even if those elements are not ancestors in the dom tree...
+    visit @https://codepen.io/gaearon/pen/jGBWpE
+
+vid 32 - Error boundary:
+    error handling phase  in lifecycle methods as static getderivedstatefromerror(error) and componentDidCatch(error,info)
+    basically the react unmounts the whole app tree when we come across an runtime error
+    but think if we could catch the error and display it somewhere without affecting UI and app tree components --> Fallback UI
+    a class component which implements either one or both of the above mentioned methods will be treated as a error boundary
+    static method getDerivedStateFromError is used to render a fallback UI after an error is thrown
+    componentDidCatch is used to log the error informations
+
+    example: newfile Hero.js
+    to make some error to understand this we gonna say if the heroname is villain then we should throw the error
+    initially when we don't write the componentDidCatch and getDerivedStateFromError then whole app crashes but what we need to do is to fallback/moveback the UI that causes the error and others are still rendered
+    to do that we gonna create a new file called errorboundary.js
+    
+    errorboundary catch errors during rendering and also the during the constructor of the whole component tree below them
+    they don't catch errors inside the event handlers so to catch error inside event handlers better opt for the try,catch statements
+
+vid 33 - Higher order component part 1
+    why higher order component is needed?
+    new file clickcounter.js
+    assume after written no of times button clicked fn in it .. we need to also implement that a heading which shows how many times we hovered over it
+    so newfile hoverCounter.js
+    now after implementing this also..say client needs a change
+    an input element that counts the number of key presses newfile:keycounter.js
+    but see here are actually duplicated the saem increment count function..that makes redundant code
+    we should have opted for the reusable code usage rather than duplicating and pasting the same increment fn everytime
+    so to make code reusable..we might think to lift the state up to a common parent component and pass down the handler as props
+    it would work for this scenario as we could think these are to be made under parent-child component relationship
+    assume if there are multi-level among these component then sending state(COUNT),handler as props and maintaining them would be too tedious
+    so inthose scenario, to ahre a common funcytionality between components without lifting state up we could opt for the "higher-order components"
+
+vid 34 - higher order components(HOC) part 2
+    what is HOC :  it is a patern where a function takes a component as an argument and returns a new component
+    eg : const newcomp = HigherOrderComponent(oldcomp)
+    typically an hoc adds data or functionality to the original component and returns them as new component
+    the new component can be  caled as 'enhancedcomponent'
+    like const ironman = withsuit(tonystark)
+    lets try to implement a basic hoc and then try to build another hoc for the key,click,hover counter example
+    basic hoc: withcounter.js (hoc filenaming convention camelcase)
+    note whenever the enhanced component ie hoc added component is seen...we could state that those components has the props which could mimick the behaviours as state for hoc alone...ie newcomponent from hoc has the props as mutable without having extra local state var to prop assignment.. note the original count memory/value won't be modified eventhough props act as mutable here
+    ie HOC individually returns the props as their shadow state to the key,hover,click components here and make sure that one's change of count doesn't interrupt the others 
+    naming convention changes are made in files
+
+vid 35 - higher order components part 3
+    passing down the props: assume we passed a prop named message from app to clickcounter and try to render it in clickcounter but it won't be displayed
+    this is because when props are mentioned for the clickcounter .. then those props are sent to the hoc not the clickcounter due to export statement we mentioned in clickcounter hoc(clickcounter)
+    so now also to pass down that props from app to hoc then hoc to clickcounter we have to write that in hoc
+    <wrappedcomponent 
+        ourinitialpropsstatements={..blah,blah,blah..}
+        {...this.props} //-->this is spreading remaining props
+    </wrappedcomponent>
+
+    passing paramters to hoc functions ie for incrementcount()
+
+    say in with counter make changes in
+        class withCounter =(wrappedcomponent,incr.number)
+        {
+            ....    
+            ....
+            ....
+            incrementcount=(incr.number)
+            {
+                    logic: .. ,., + incr.number
+            }
+        }
+
+    then in clickcounter export default withCounter(clickcounter,3)
+            keyounter export default withCounter(keycounter,5) 
+like that we can do it in hoc....
+
+
+vid 36 - render prop pattern:
+    this is also a pattern to share data between components
+    newfile : clickcounter2.js,hoverCounter2.js
+    similar to without hoc we are here duplicating the code..so to remove redundancy we go for Renderprops pattern here
+
+vid 37 - render props part 2:
+    render props:
+   newfile: User.js
+   by seeing the user.js we can understand that it is possible to have a prop named render which will have a function and can cantol the UI based on the fn body
+   render props : technique for sharing code between react components using a prop whose value is a function
+   so now we gonna do that for the  counter example
+   newfile county.js
+
+(if doubt arises better proceed to watch video of HOC and render prop)
+
+vid 38 - context part 1:
+    react context.
+        assume we have a structure like below.. where app has a state var called username.. which is need to be rendered on components like A,D,F for our usecase
+
+                app 
+        ---------|---------
+        A        B        C
+                 |        |
+                 D        E
+                          |
+                          F 
+                
+    here see sending the username to components like
+        A = app -->username as prop to A
+        D = app -->username as prop to B --> then B -->username as prop to D
+        F = app -->username as prop to C --> then C -->username as prop to E --> then  E -->username as prop to F
+
+here eventhoughthe components like B,C,E doesn't need the username we have to make it to passthrough them inorder to get them to their descendant components... it could be worse if the level of intermediatory components exceeding say 5 levels
+so to send the data as prop directly to the required component without infecting the other components then we could use 'CONTEXT"
+
+CONTEXT PROVIDES A WAY TO PASS DATA THROUGH THE COMPONENT TREE WITHOUT HAVING TO PASS PROPS DOWN MANUALLY AT EVERY LEVEL
+
+
+vid 39 - context part 2:
+    now for the particular use case we could take app(username)->c->e->f(needed prop-username from app)
+    so now make files like compc,compe,compf,usercontext.js and do the nesting
+    3 steps for using context:
+            1) create the context --> usercontext.js
+            2) provide a context value -> say placed context in a component then it's descendants alone can consume the context
+            3)consume context value in necessary components/area --> we needed it in compf so we wrapped our message 
+
+
+vid 40 - context part 3:
+    we can set a default value to our context by sending that as a argument to the react.createcontext();
+    if the default value is set in set one and the contextprovider is not done/wrote but contextconsumer is used then the value to be rendered will be the default value that we set in step 1
+    contextType property -- > implicit access of the contextprovider value/ default context value
+    if it is so easy then why can't we simply use the contextType rather than contextconsumer
+            because it has some limitations like    
+                  1) contextType only works with class components
+                  2) we can subscribe only to a single context using the contextType
+
+    refer the multiple context consuming in the video.
+
+vid 41 - react and HTTP part 1:
+    react is just UI based library which is no way concerned about the HTTP comms with the server
+    then how do we make ajax/HTTP request/api calls in react?
+    react doesn't have a way to fetch / send data/request to the server.. it doesn't even need to know that there exists a server to be communicated
+    usually react assumes the data to be rendered is based upon the props and state not the server side value .. it is react's assumption
+    thus to handle such server based request/response we would need a HTTP library which could be anything like axios,fetch and other libraries too... we gonna use axios for understanding
+    so lets add axios package and does the stuff -- npm install axios
+
+vid 42 - react and HTTP part 2 - get request:
+    now lets see how to fetch data from api using axios and display it
+    for api endpoint...we gonna use JSON placeholder api
+    new file : postlist.js
+    the control flow is like   initially constructor called where posts[] is empty, then after that render() is called where lists of post title is displayed but they don't have list of 100 post
+    then goes for componentDidMount where api fetch is done by axios and state is updated ie posts[] are populated thus re-rendering of component happens as the state changed
+
+vid 43 - react and HTTP part 3 - post request:
+    lets try to post data to an api from our react app
+    lets try to have 3 input fields and on submit btn click then http post has to be made to the api
+    new file : postform.js
+
+vid 44 - react hooks intro
+    what are hooks?
+        it allows to use react features without writing a class... from version 16.8 react introduced hooks
+        eg : to use state we had to write a class component.. but now by using hooks u can use state by hooks in functional component
+        hooks doesn't work inside classes
+    why hooks?
+      reason set 1:
+        to work with classes.. we needed to understand working of 'this' keyword in js.. which is tedious in react class comps
+        we also needed to remember binding event handlers in class components
+        classes don't minify very well and make hot reloading very unreliable
+       reason set 2:
+        there is no particular way to reuse stateful component logic between components
+        the reusablecode could be achieved using HOC and render-props but that involves wrapping and restructuring of code..which would be an extra effort
+        this also makes code harder to follow
+        hooks- makes a better way to share stateful logic without changing the component hierarchy
+       reason set 3:
+         while creating components for complex scenarios such as fetching and subscribing to events we find that related code are not organized in one place
+         but seems scattered among different lifecycle methods
+         eg: data fetching could be in componentDidMount and componentDidUpdate
+         eg: event listeners in componentDidMount and componentWillUnmount
+         see here both data fetching and event listeners are in componentDidMount
+         due to stateful logic sometimes its harder to break/segregate them into samller ones
+         these could be solved by hooks which allows you to break the needed ones into smaller functions rather than typical lifecycle bsaed method rules
+
+        HOOKS PROVIDES A MORE DIRECT API TO REACT CONCEPTS THAT WE ALREADY KNOW SUCH AS
+            PROPS,STATE,CONTEXT,REFS AND SOME LIFECYCLE
+
+
+
