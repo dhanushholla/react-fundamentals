@@ -642,5 +642,54 @@ vid 44 - react hooks intro
         HOOKS PROVIDES A MORE DIRECT API TO REACT CONCEPTS THAT WE ALREADY KNOW SUCH AS
             PROPS,STATE,CONTEXT,REFS AND SOME LIFECYCLE
 
+vid 45 - Usestate hook:
+    usestate hook allows us to use the state in functional components
+    we gonna consider a simple counter example for this hook now
+    newfile : hookcounter.js
+    code flow will be like  
+            import usestate
+            then call usestate with default value that makes the component to mount and then note that default value wont be used on re-renders
+            when btn is clicked the state count would be updated by incrementcount which takes parameter ie nothing but logic to be done ie oldcount+1 
+            which makes the updation in count and thereby leading to re-render and UI change
+    
+!!!!!Rules of hooks!!!!!!:
+      only call hooks at top level
+      don't call hooks inside loops,coditions, or nested functions
+      only call hooks from react functions ie from react functional components not just plain js functions
 
+vid 46 - useState with previous state:
+    here we are going to implement counter with increment,decrement and reset the count..which makes the prevstate count as a dependency
+    newfile :hookcounter2.js
+    here the count+1,count-1 as logic passed as params to setCount which is similar to setState is very unsafe way of state updation..lets c y
+     assume now we add another button that increments that count value by 5
+     here you could observe that the value gets incremented by 1 rather than 5 each times and gives out irregular outcome
+     it is becuase the setCount is still using the stale value of the loop 's 1st iteration
+     so we have to use the second form of the setCount function that is accepting the function as parameter which has access not only to the stale value but also to the previous state property count
+     so replace it right there, so it is also applicable to  increment,decrement at somepoint so ..replace it there as well 
+  ~~~~~~~~  note ie whenever you need to update a prevState depended newState value ... then better pass a fn to setState() that has prevstate property like prevcount to setCount() in our case ~~~~~~~~~~
+
+vid 47 - useState with objects:
+    here we are going to make use of an object as the state property variable
+    new file:hookcounter3.js 
+    there initially we could see that when we type in firstname ..lastname is removed from state and viceversa
+~~~~~~~~ note: this is because "usestate's setter function doesn't automatically merge and update the object"
+    so that we have to do the merge and update manually using this spread operator
+
+
+vid 48 - useState with arrays:
+    here we're going to make use of the array to be a state property variable -- to be precise state = == array of objects here
+    newfile :hookcounter4.js
+
+UseState HOOK Summary:
+        it lets you to add state to functional components
+        in class component state is always and object but in functional component with useState .. the state can be number,array,object,array of objects etc...
+        useState() hook returns 2 elements one is current state property value with default value assigned and another one is a state setter function
+        in case, the new state value depends on prevstate value .. then we have to pass a function as argument to the setterfn with access to prevstate
+        if the state property variable is object,array,array of object  make sure to spread them(state property value) in setterfn as the usestate setter method by default doesn't handle the merge and updation of all state property value
+
+vid 49 - useEffect Hook
+       while using the class components we would have made use of the lifecycle methods such as componentdidmount,componentDidUpdate for the data fetching and componentDidMount,componentWillUnmount for timer related sideeffects etc.. 
+       but in class component by doing such things we get to face the issues such as the code redundancy,unrelated codes are in same lifecycle methods and yet related codes but they are scattered among different lifecycle methods
+       useEffect is addressing the solution for above issues and it allows us to perform the side effects in functional components 
+       it is known to be a close replacement for the componentDidMount,componentDidUpdate,componentWillUnmount
 

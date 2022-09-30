@@ -39,6 +39,10 @@ import Compc from "./component/Compc";
 import { UserProvider } from "./component/Usercontext";
 import Postlist from "./component/Postlist";
 import Postform from "./component/Postform";
+import HookCounter from "./component/HookCounter";
+import Hookcounter2 from "./component/Hookcounter2";
+import Hookcounter3 from "./component/Hookcounter3";
+import HookCounter4 from "./component/HookCounter4";
 //import Greet from './component/Greet'; normal import for default export
 // import Greetcomponent from './component/Greet'; different name import for default export
 function App() {
@@ -113,8 +117,15 @@ function App() {
         {/* <Postform></Postform> */}
 
         {/* react hooks */}
+        {/* useState */}
+        {/* <HookCounter></HookCounter> */}
+        {/* <Hookcounter2></Hookcounter2> */}
+        {/* <Hookcounter3></Hookcounter3> */}
+        {/* <HookCounter4></HookCounter4> */}
 
+        {/* useEffect */}
         
+    
     </div>
   );
 }
