@@ -687,9 +687,80 @@ UseState HOOK Summary:
         in case, the new state value depends on prevstate value .. then we have to pass a function as argument to the setterfn with access to prevstate
         if the state property variable is object,array,array of object  make sure to spread them(state property value) in setterfn as the usestate setter method by default doesn't handle the merge and updation of all state property value
 
-vid 49 - useEffect Hook
+vid 49 - useEffect Hook:
        while using the class components we would have made use of the lifecycle methods such as componentdidmount,componentDidUpdate for the data fetching and componentDidMount,componentWillUnmount for timer related sideeffects etc.. 
        but in class component by doing such things we get to face the issues such as the code redundancy,unrelated codes are in same lifecycle methods and yet related codes but they are scattered among different lifecycle methods
        useEffect is addressing the solution for above issues and it allows us to perform the side effects in functional components 
        it is known to be a close replacement for the componentDidMount,componentDidUpdate,componentWillUnmount
+
+vid 50 - useeffect after render:
+        we are going to mimick the usage of componentDidMount,componentDidUpdate using the useEffect hook in the functional components
+        here we have the usecase as the component that updates the title of the document with the counter value... whenever the increment btn is clicked the title gets updated
+        lets write it with functional component with useeffect
+        newfile : hookue1.js
+        //useeffect is also a function hook which could be called where the parameters are nothing  but a function which we need to be called after every render cycle
+        //here in our usecase whenever we click the button we need to update the document title as well.. so after each state update,the render is called.. then after that we need to manually add the changed count item in the title thus we gonna make use of componentdidupdate in class component but here we gonna make use of useeffect hook
+        //where the params is the empty arrow function with our logic
+        working flow of useEffect : when we specify useEffect,we are asking reeact to execute the function that we passed as params... everytime when the component renders... ie it also runs during the first render and then further update rendering also
+        we could customise what should be in initial render and followed by updates with different logic can be achieved using the conditional rendering
+        both usestate and useeffect are inside the functional components thus useeffect can use the state by usestate and if anyother props available without any extra codes
+
+vid 51 - conditionally run useeffect:
+        sometimes making call to unneeded logic both on initial render and subsequent update render will cause performance issues
+        so we need to find a way to conditionally render/use the useeffect hook inside a functional component
+        for here the usecase we gonna consider ... we have input that accepts a text to state.name.  
+        but when we do like that assume input is dhanu and we have a log statement says didupdate called in componentDidUpdate.. there we could find that the whenever the input changes but button not clicked..we could see that the same title was assigned to document title each time.. thus it could be avoided by conditionally seeking whether the previous count === now count then we could skip that assignment likewise
+        new file : Hookue2.js
+        //conditionally using the effect hook
+        //we could achieve it by passing a second args to the useeffect which is of type array..where in which we could mention either the state or the props that we need to keep an eye for change... if those changes then only the effect executes
+        //here now by default react with useeffect will implicitly check for change in count.. if changes are seen then it would execute else it would be not executed..  thus change in the state->name happens but it isn't provided in the useeffect second param the useffect() logic won't execute
+
+
+vid 52 - Run effects only once:
+    lets see how to run useeffect only once or let's see how to mimic the componentdidmount using useeffect
+     assume for this usecase..we have a component that makes notes of the mouseposition initially
+     ie in class component we would listen for mousemove event and log the mouse coordinates in the UI by storing those coordinates in the state via the componentDidMount..lets see how to mimic it using useEffect
+     note we have to write the logic of setting up the mouse event listener in componentDidMount..not the tracking logic okay..so concentrate to make the same using useeffect
+      newfile : Hookue3.js
+      // here  [] specified on second param states that this useeffect down't depend on any state or props..thus we don't need this logic to be executed more than once(ie only during initial render not on updates) explicitly
+
+vid 53 - useEffect with cleanup:
+    lets see how to mimic the componentWillUnmount functionality with the useEffect hook
+    lets understand where we could possible use the componentWillUnmount..
+    for our understanding lets consider that we create container component for the hookue3.js/ mousecoordinate example with a button that will toggle the container's visibility
+    newfile:Mousecontainer.js, hookue4.js
+    eventough the display is set to false... in console we could observe the mouse coordinate change event console log..with a warning that shows that the component(hookue4) was unmounted but the event listeners/unsync task in that component was not cleaned up/relieved from the DOM ( which in class component done via componentWillUnmount)
+    ie stating can't perform update in unmounter component..will is nothing but a memory leak
+    this could be resolved using useEffectwith cleanup functionality
+    ie fn passed as first param to the useeffect() will return another fn implicitly which could be used to mimic the componentWillUnmount .. so explicitly return an function will removing eventlistener logic
+
+vid 54 - useeffect with incorrect dependency:
+    lets see the common mistakes that been done by the person who learnt class components then functional with hooks especially useeffect here
+    consider we have a counter that automatically updates value everysecond usng setInterval logic
+    newfile : intervalhookcounter.js
+    //this one only executed only once making count=1 and stopped working
+    //the problem is "when we try to use the dependency array(2nd param to useeffect) to determine when to render/re-render we will run into implementation problems"
+    //rather than try to use the [] to mimic componentdidmount/willunmount we must use that to let reat know what state var it should monitor to execute the useeffect logic
+    // here react thinks that the change of count to 1 has happened but while trying to mimic componentdidmount for timer,,we forgot to add re-render condition then behaves like componentwillunmount ie count incrementing which also needs to be done using the useeffect hook(only one call to setinterval will be sent)
+    //dependency list is added to make it work for all re-rendering,componentwillmount,componentupdate,componentwillunmount
+    //another way to make it work without dependency list is to modify the tick function .. here the setcount inside tick() takes care of count's value usimg pevcount we could remove the count from dependency list .. but still it will behave as componentDidmount,componentwillunmount,componentDidupdate
+    note:sometimes you might want to call a function within useeffect, it is preferred to also define the functionbody/logic within the useeffect to avoid the reference error that may happens if the params to the function is not accessible to the useffect incase where th fnbody is defined outsde useeffect..note that prop could be a dependency and need to be mentioned in second param..ie dependency array to useeffect
+
+    specifying multiple useffects():
+    it is possible to include multiple useeffect() calls within the same component, refer the docs
+
+vid 55 - fetching data using useffect part1:
+    there would be a feature called "suspense" which would be responsible for data fetching
+    we gonna  use useeffect for api fetch using axios
+     newfile:datafetchue.js
+
+vid 56 - fetching individual post by providing id in useeffect part 2:
+    newfile:datafetchue2.js
+    it is correct but for each change in input field we hit a get api fetch..which is not optimised..lets try to change it in upcoming session
+
+vid 57 - fetching data using useffect part 3:
+    we would create a button and write a handlerfn within which we hit the api call
+    it is good but we need to achieve the same using effect hook
+    we need to create a state variable whose value would be changed on the button click event
+    newfile:datafetchue3.js
 

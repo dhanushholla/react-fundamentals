@@ -43,6 +43,14 @@ import HookCounter from "./component/HookCounter";
 import Hookcounter2 from "./component/Hookcounter2";
 import Hookcounter3 from "./component/Hookcounter3";
 import HookCounter4 from "./component/HookCounter4";
+import Hookue1 from "./component/Hookue1";
+import Hookue2 from "./component/Hookue2";
+import Hookue3 from "./component/Hookue3";
+import Mousecontainer from "./component/Mousecontainer";
+import Intervalhookcounter from "./component/Intervalhookcounter";
+import Datafetchue from "./component/Datafetchue";
+import Datafetchue2 from "./component/Datafetchue2";
+import Datafetchue3 from "./component/Datafecthue3";
 //import Greet from './component/Greet'; normal import for default export
 // import Greetcomponent from './component/Greet'; different name import for default export
 function App() {
@@ -124,6 +132,16 @@ function App() {
         {/* <HookCounter4></HookCounter4> */}
 
         {/* useEffect */}
+        {/* <Hookue1></Hookue1> */}
+        {/* <Hookue2></Hookue2> */}
+        {/* <Hookue3></Hookue3> */}
+        {/* <Mousecontainer></Mousecontainer> */}
+        {/* <Intervalhookcounter></Intervalhookcounter> */}
+        {/* <Datafetchue2></Datafetchue2> */}
+        {/* <Datafetchue3></Datafetchue3> */}
+
+        {/* Usecontext hook */}
+
         
     
     </div>
