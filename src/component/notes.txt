@@ -774,5 +774,75 @@ vid 60 - Usecontext hook part 3:
         1) create a context
         2) provide context at higher level/parentcomponent to make sure that their child can consume them 
         3) consuming value alone is chnaged using the usecontext hook
-    
+
+vid 61 - useReducer what and why:
+    usereducer is a hook for state management
+    state management is also done by usestate thus usereducer act as the alternative to usestate
+    usereducer is primitive hook when compared to usestate .. in fact usestate was built on the basis of usereducer
+    when to use useReducer and when to use Usestate? we will know that after the exaample we learn..let's revisit this question later
+    from the name of the state itself we get to know their purpose like 
+            usestate-state management
+            useffect - perform side effects
+            usecontext - context api
+            usereducer - reducers
+    it is not necessary to know redux to understand the usereducer but knowing it will increase the understandability
+    reducers:reducer is nothing but the manual fn logic that we give for reduce() in js...the reduce() will result a single output
+    reduce() will take 2 paramters first arg is the user's fn logic and second args is nothing but a initial value that the function could make use of
+    reduce(reducerfn,5)
+
+    |||rly , 
+                reduce in js                     ||||               useReducer Hook
+            array.reduce(reducerfn,initialvalue)                useReducer(reducerfn,initialstate)
+     singlevalue=reducerfn(accumulator,itemvalue)               newstate=reducerfn(currentState,action)  //action is nothing but a thing which determines the change from current state to new state
+            reduce() returns a single value                     useReducer returns a pair of values [newstate,dispatch]  //dispatch method is basically used to specify the action
+
+vid 62 - useReducer (simple state & action)
+    for understanding we gonna create a counter example and try to understand concept
+    newfile:counterur1.js
+    1) import usereducer from react
+    2)define initial state and reducerfn
+    3) add event handler logic with call to dispatch(appr..action name ) like disptach('increment') which goes to reducer(state(ie count),increment) likewise execution
+
+vid 63 - useReducer(complex state & action):
+    here state and action are not simple number,string etc,... but they are going to be objects
+    newfile:counterur2.js
+    note: we can maintain both state as well as action as the objects..
+    by maintaining action as object we can have additional data to the reducer function
+    by maintaining state as object we can keep track of multiple state variables
+    mainataining multiple state varaible as single object is best preferred for the case of a global state object
+    but for local state/1 component needed state we have another way to maintain multiple state variables.. lets see how in next section -- > can be achived using multiple usereducer hooks
+
+vid 64 - Multiple usereducer hooks:
+    newfile:counterur3.js
+    note: when dealing with multiple state variables that have the same state transitions/actions, it is good to use the multiple usereducers making call to same reducerfn but changes in statevarname,dispatchname should be maintained
+    thus it allows to avoid the complexity of merging the state one/other incase of those two statevariables are coupled to be used as a single state object variable and also reduced duplicating code
+    note : so far we have only seen usereducer for local state management that is at component level
+
+vid 65 - usereducer with useContext:
+    useReducer - local state management
+    but at some point of time we might need to share the state of an component among other one .. ie working with global state
+    we can manage global state by combining usereducer with usecontext hook
+    assume an usecase scenario where we can three child components to app component where we need to implement a single counter and those counter value and method should be accessible by all three children say a,b,C
+    there we could use the usereducer with usecontext
+    we might use the method as prop to the parent comp but it is not applicable if the level of tree hierarchy is more..ie deeply nested children..there we have to go for usecontext with usereducer
+    assume the same hierarchy in vid 38,39..but the differene is here the counter is implementted in app.js and needed to be accessible from a,d,f components
+    newfile:componenta,b,c,d,e,f.js
+    create a counter in app.js using reducer hook
+    provide and consume counter context in needed descendants
+
+vid 66 - fetching data using usereducer hook:
+    newfile:fetchUR1.js
+    here we aim to fetch data from endpoint ..we have loader if fetch successful show data else show error message
+    here we gonna first make it traditional fetch using the usestate,useffect
+
+vid 67 - fetching data using usereducer hook part 2:
+   newfile:fetchUR2.js  .. lets see how to mimic the same using the usereducer hook for this particular usecase
+
+vid 68 - useState vs useReducer:  
+    scenario                    Usestate can be used                useReducer can be used
+ type of state variable           number,string,boolean              object/array
+ no of state transitions           one or two                        more than 3 inside a component
+ related state transitions         then don't use                    use it
+ business logic                    easy logic                        for complex business logic
+ state                             local component state             global state mngt   
 

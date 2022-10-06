@@ -20,7 +20,7 @@ import Form from "./component/form";
 import LifecycleA from "./component/LifecycleA";
 import Fragmentdemo from "./component/Fragmentdemo";
 import Table from "./component/Table";
-import React, { PureComponent } from "react";
+import React, { PureComponent, useReducer } from "react";
 import Parentcomp from "./component/Parentcomp";
 import Refsdemo from "./component/Refsdemo";
 import Focusinput from "./component/Focusinput";
@@ -52,12 +52,44 @@ import Datafetchue from "./component/Datafetchue";
 import Datafetchue2 from "./component/Datafetchue2";
 import Datafetchue3 from "./component/Datafecthue3";
 import Compc1 from "./component/Compc1";
+import Counterur1 from "./component/Counterur1";
+import Counterur2 from "./component/Counterur2";
+import Counterur3 from "./component/Counterur3";
+import ComponentA from "./component/ComponentA";
+import ComponentC from "./component/ComponentC";
+import ComponentB from "./component/ComponentB";
+import FetchUR1 from "./component/FetchUR1";
+import FetchUR2 from "./component/FetchUR2";
 
+
+
+//for vid-60
 export const urcontext=React.createContext()
 export const chncontext=React.createContext()
+
+//for vid 65
+
+export const countcontext=React.createContext()
+const initialstate=0
+const reducer=(state,action)=>{
+  switch (action) {
+      case 'increment':
+          return state+1
+      case 'decrement':
+          return state-1
+      case 'reset':
+          return initialstate
+      default:
+          return state
+  }
+}
+
+
 //import Greet from './component/Greet'; normal import for default export
 // import Greetcomponent from './component/Greet'; different name import for default export
 function App() {
+  
+  const[count,dispatch] = useReducer(reducer,initialstate) // line belongs to vid 65
   return (
     <div className="App">
       {/* <Greet></Greet>
@@ -150,7 +182,29 @@ function App() {
           <Compc1></Compc1>
          </chncontext.Provider>
        </urcontext.Provider> 
-     */}
+         */}
+
+         {/* Usereducer hook */}
+         {/* <Counterur1></Counterur1> */}
+         {/* <Counterur2></Counterur2> */}
+         {/* <Counterur3></Counterur3> */}
+         {/* <countcontext.Provider value={{countstate:count,countdispatch:dispatch}}>
+            <div> count ={count}</div>
+            <ComponentA></ComponentA>
+            <ComponentB></ComponentB>
+            <ComponentC></ComponentC>
+         </countcontext.Provider> */}
+         {/* <FetchUR1></FetchUR1> */}
+         {/* <FetchUR2></FetchUR2> */}
+
+         {/* UseCallback Hook */}
+         
+         
+         
+
+
+
+
     </div>
   );
 }
