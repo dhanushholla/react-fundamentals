@@ -764,3 +764,15 @@ vid 57 - fetching data using useffect part 3:
     we need to create a state variable whose value would be changed on the button click event
     newfile:datafetchue3.js
 
+vid 58,59 - Usecontext hook part 1,2:
+    normal explanation of context usage (same as vid 38,39,40)
+    usually consuming multiple context means more nested provider and consumer context code is to be written thus to overcome it we gonna make use of usecontext hook
+
+vid 60 - Usecontext hook part 3:
+    newfile:compe1,compc1,compf1 
+    the usage of Usecontext is similar to traditional context usage but a slight change
+        1) create a context
+        2) provide context at higher level/parentcomponent to make sure that their child can consume them 
+        3) consuming value alone is chnaged using the usecontext hook
+    
+

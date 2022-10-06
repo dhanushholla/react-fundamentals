@@ -20,7 +20,7 @@ import Form from "./component/form";
 import LifecycleA from "./component/LifecycleA";
 import Fragmentdemo from "./component/Fragmentdemo";
 import Table from "./component/Table";
-import { PureComponent } from "react";
+import React, { PureComponent } from "react";
 import Parentcomp from "./component/Parentcomp";
 import Refsdemo from "./component/Refsdemo";
 import Focusinput from "./component/Focusinput";
@@ -51,6 +51,10 @@ import Intervalhookcounter from "./component/Intervalhookcounter";
 import Datafetchue from "./component/Datafetchue";
 import Datafetchue2 from "./component/Datafetchue2";
 import Datafetchue3 from "./component/Datafecthue3";
+import Compc1 from "./component/Compc1";
+
+export const urcontext=React.createContext()
+export const chncontext=React.createContext()
 //import Greet from './component/Greet'; normal import for default export
 // import Greetcomponent from './component/Greet'; different name import for default export
 function App() {
@@ -140,10 +144,13 @@ function App() {
         {/* <Datafetchue2></Datafetchue2> */}
         {/* <Datafetchue3></Datafetchue3> */}
 
-        {/* Usecontext hook */}
-
-        
-    
+        {/* Usecontext hook  we try to consume the provided context value in compe1.js using usecontextHook*/}
+        {/* <urcontext.Provider value={"this is eg of usecontext hook"}>
+         <chncontext.Provider value={"part 3 video number 60"}>
+          <Compc1></Compc1>
+         </chncontext.Provider>
+       </urcontext.Provider> 
+     */}
     </div>
   );
 }
