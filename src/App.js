@@ -60,6 +60,15 @@ import ComponentC from "./component/ComponentC";
 import ComponentB from "./component/ComponentB";
 import FetchUR1 from "./component/FetchUR1";
 import FetchUR2 from "./component/FetchUR2";
+import Parent from "./component/Usecallback/Parent";
+import Countermemo from "./component/Countermemo";
+import Reffocusinput from "./component/Reffocusinput";
+import RefTimer from "./component/RefTimer";
+import Doctitle from "./component/Doctitle";
+import Doctitle1 from "./component/Doctitle1";
+import Counterwithouthook from "./component/Counterwithouthook";
+import Counterwithouthook1 from "./component/Counterwithouthook1";
+import Userform from "./component/Userform";
 
 
 
@@ -198,11 +207,21 @@ function App() {
          {/* <FetchUR2></FetchUR2> */}
 
          {/* UseCallback Hook */}
-         
-         
-         
+         {/* <Parent></Parent> */}
 
+         {/* useMemo hook */}
+         {/* <Countermemo></Countermemo> */}
 
+         {/* useRef hook */}
+         {/* <Reffocusinput></Reffocusinput> */}
+         {/* <RefTimer></RefTimer> */}
+
+         {/* custom hook  */}
+         {/* <Doctitle></Doctitle> 
+          <Doctitle1></Doctitle1> */}
+         {/* <Counterwithouthook></Counterwithouthook>
+         <Counterwithouthook1></Counterwithouthook1> */}
+          <Userform></Userform>
 
 
     </div>

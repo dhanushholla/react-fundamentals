@@ -846,3 +846,122 @@ vid 68 - useState vs useReducer:
  business logic                    easy logic                        for complex business logic
  state                             local component state             global state mngt   
 
+vid 69 - UseCallback hook:
+    lets start what is performance optimization?
+        assume the code logic in video for understanding  the performance optimization.
+        here in video the code is like we have a parentcomponenter.js which in turn has a title component with logic of displaying the title and count component where we have prop of text="age" and count={age} and it will render the text and count prop through destructuring then we have a button to increase the age from parentcomponenter and then we again have a count component which in turn will renderout the props text=salary and count={salary} then after that we have a button to increment the salary from parentcomponenter 
+        we have explicitly added the console.log statements in each button,count and title component to know about the performance optimization and its metrics
+        you could observe that whenever the button is pressed instead that component alone re-rendering all the components gets re-rendered which inturn leads to heavy performance issues.
+        it would be a tedious incase of more nested components.
+        to improve performance, we have to restrict re-render to the components which only meant to be re-rendered and others untouched.
+        eg:increment age is pressed then only the age component and button component related to the age must be re-rendered and all others must be left untouched
+        to get this implemented we have to opt for the react.memo(needed components)..which makes the re-render only if there is a change in its state or its props..else no re-rendering
+        but the issue that we observe is that when we click the increment age/salary both the button components gets render logs .. it is also a minor performance issue
+        it is because each time whenever the parentcomp is re-rendered we get to see a new salaryincrement() also created but the fact is that it is different due to the reference equality of the parentcomponenter instance
+        ie in sfs component.. the function inside the component defn is different from the function after the re-render..thus react.memo doesn't restrict the re-rendering as the prop incrementsalary is now a new different reference
+        To fix this issue of re-rendering due to the reference equality of the parentcomponenter instance.. we opt for the use callback hooks
+       newfiles are under /component/usecallback 
+       
+       what is callback hook:?
+             Usecallback is a hook that will return a memoized version of the callback function that only changes if one of the dependencies has changed.
+             in our usecase, here ther incrementsalary fn will be cached by react and be returned only if the salary is not incremented.if salary incremented,then a new version of incrementsalary() will be formed and returned
+       why  we need usecallback hook:?
+             it is useful when passing callbacks to optimised child components that rely on reference equality to prevent unnecessary renders.
+       how to use callback hook:?
+            import usecallback from  react
+            write the usecallback function which accepts a callback function as a parameter and dependencies  array will be second parameter
+        
+        callback hook is use to achieve performance optimization
+       
+        why not we use the callback hook everysingle time?
+        Answer:  https://kentcdodds.com/blog/usememo-and-usecallback
+
+vid 70 - useMemo hooks:
+      this is also a hook that is related to performance optimization
+      newfile:countermemo.js  
+      made 2 state variable and 2 function which inturn calls 2 countervariable setting functions inside them..which are to be triggered using btn onclick event handlers
+      it works fine..but assue now we have to show the number is odd or even near the btn 1
+      assume the iseven function in our case is now a very complex function that is not so good with performance optimization and requires considerable amount of time in real world.( like modifying array with 1000 items and their mapping and everything)
+      so now manually we introduce some delay in the iseven function
+      here the manually placed loop doesn't affect the output value but definitely the return time of the output would be increased.
+      there you could experience a delay in the counter 1 button but also you could see that there is a delay in the counter 2 as well in terms of the UI updates.
+      it is because whenever the state is changed there exists an re-render where the call to iseven function is hit in the jsx part of return() thus making it to slow the ui update in counter 2 as well
+      so thus we need a way to tell react to not to use the iseven function/long time consuming function execution unnecessarily .. ie iseven must not be called whenever interaction happens in counter 2
+      now we gonna usememo hook here
+      usememo hook will only recompute the cached value when one of the dependencies has changed.which allows you to avoid expensive calculations on every render.
+      it is similar to usecallback in working flow.
+      steps:    
+            import usememo hook
+            it takes two arguments..one is the function whose return value needs to be cached which in our case is iseven() and other one is dependencies array
+      thus after this we could experience delay in counterone iseven but the performance of the countertwo update is seamless because whenever the state of counter2 is updated..component re-renders but the counterone is not updated thus the cashed value of iseven is retained each time
+
+      usememo and usecallback seems similar but the difference is :
+                usecallback caches the whole function itself
+                but the usememo caches the function's result only ,after function is invoked
+
+
+vid 71 - Useref hook part 1:
+        this hook makes possible to access the Dom nodes directly inside the functional components
+        for understanding  ...we gonna take scenario of making focus to an inout field usecase
+        newfile:reffocusinput.Js
+        steps:
+            import useref from react
+            create a ref variable by calling useref and passing the initial value ie null
+            then attach the ref to needed element ie input field here
+            then in useeffect we gonna make the focus call for the element through ref.current.focus() property
+
+vid 72 - Useref hook part 2:
+    assume that there is a classtimer class component which gonna display value of timer in state  incremented each second and  we remove/stop the timer in componentwillunmount through a button click
+    now think that we have to replicate the same using functional component
+    newfile:reftimer.Js
+    there you could see the error that interval variable is scoped inside the effect hook and can't be accessed inside the btn handler function.. there we could opt for the ref concept using useref
+    note useref can also be used to store DOM node and also the mutable values(general const,variable etc..)
+    again note that value stored in useref will persist throughout the re-renders and doesn't cause any re-render eventhough the stored value in useref is changed
+
+    useref can also be used to create a general container to store generic mutable value similar to instance property in a class component
+    this generic counter doesn't causes any re-render eventhough the stored value in it was changed and also remembers the value in container evenafter the re-render triggered by someother state var changes of that component
+    still we need to see : useimperative handle,uselayouteffect and usedebug value hooks
+
+vid 73 - custom hook prelude:
+    so far we have discussed about 
+        useState,
+        useEffect,
+        useContext,
+        useReducer,
+        UseCallback,
+        useRef,
+        useMemo
+    these are the hooks which are provided by the react library.these are mere function which could be invoked by our component
+    we can create our custom hooks by extracting the functional reusable logic.
+    A custom hook is basically a javascript function whose name starts with 'use' keyword.
+    A custom hook can also call other hooks if required.
+    we opt the custom hook to share logic between components..thus serves as alternative to HOC and Renderprops
+
+vid 74 - custom hook - useDocumenttitle Hook:
+    we gonna create a counter and place the countervalue as document title without using custom hook and then achieve the same using custom hook
+    newfile: Doctitle.Js
+    now we want to update the title from another component
+    newfile:Doctitle1.Js
+    assume likewise 10 different component want to update the same document title then we would be repeating same logic in all component..which is massive code redundancy
+    to avoid it we could build it as a hoc/renderprop and use it else...as we know hook now..we could create a custom hook with that logic and import it and use it wherever needed
+    now newfile: /customhook/useDoctitle.js
+    starting with 'use' makes the linters to understand these are hooks are follow the standard of the hook rules and conditions.
+    the redundant code was nothing but the updation of doctitle in useeffect in previous file..make it as logic for our custom hook
+
+    ALWAYS TRY TO REUSE THE LOGIC(EITHER BY HOC/RENDER-PROP/CUSTOM HOOKS)  RATHER THAN DUPLICATING THE LOGIC IN EACH COMPONENTS
+    WHENEVER THERE IS A CHANGE IN STATE, RE-RENDER HAPPENS WHICH INITITALLY CALLSOUT THE FUNCTIONS WHICH ARE DEPENDENT ON THE STATEVARIABLE AND OBTAINS THE RESULT...THUS WHENEVER THE COUNT IS INCREMENTED AUTOMATICALLY THE USEDOCUMENTTITLE HOOK IS called AND INDISE THAT THE EFFECT HOOK CHECKS WHETHER THE COUNT IS CHANGED/NOT .. IF CHANGED THEN PERFORM THE LOGIC ELSE DO NOTHING
+
+vid 75 - custom hook - usecounter Hook:
+    here we're going to create a counter logic as a usecounter hook
+    newfile: counterwithouthook.js,counterwithouthook1.js
+    now to make the code reusable  we gonna make use of the custom hook ..
+    newfile: /component/customhooks/usecounter.js
+
+vid 76 - custom hook - useinput Hook:
+    custom hook created for input elements
+    we gonna have a simple form where user gonna enter their first and last name
+    newfile:userform.js
+    what our custom hook is goint to do is to encapsulate the behaviour of the input field's onchange event and value={statevar} mapping
+    newfile: /component/customhooks/useinput.js
+``!!!!!!!! mine is not working yet to debug why !!!!!!!!!!``
+ 
