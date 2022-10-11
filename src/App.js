@@ -69,7 +69,9 @@ import Doctitle1 from "./component/Doctitle1";
 import Counterwithouthook from "./component/Counterwithouthook";
 import Counterwithouthook1 from "./component/Counterwithouthook1";
 import Userform from "./component/Userform";
-
+import Layouteffect from "./component/Layouteffect";
+import { useState,useRef } from "react";
+import Confirmationmodal from "./component/Confirmationmodal";
 
 
 //for vid-60
@@ -94,11 +96,18 @@ const reducer=(state,action)=>{
 }
 
 
+
 //import Greet from './component/Greet'; normal import for default export
 // import Greetcomponent from './component/Greet'; different name import for default export
 function App() {
   
   const[count,dispatch] = useReducer(reducer,initialstate) // line belongs to vid 65
+
+
+//for useimperativehandle
+const[open,setopen]=useState(false)
+const modalref=useRef()
+
   return (
     <div className="App">
       {/* <Greet></Greet>
@@ -221,7 +230,20 @@ function App() {
           <Doctitle1></Doctitle1> */}
          {/* <Counterwithouthook></Counterwithouthook>
          <Counterwithouthook1></Counterwithouthook1> */}
-          <Userform></Userform>
+          {/* <Userform></Userform> */}
+
+          {/* uselayouteffect */}
+          {/* <Layouteffect></Layouteffect> */}
+
+          {/* useImperativehandle  here in app write onclick for button that calls out the respective fn* which are returned from  the useimperativehandle in confirmationmodal*/}
+          {/* <>
+          <button onClick={()=>setopen(true)}>open modal</button>
+          {/* adding the handler fn defn as call to imperativehandle returned fns */}
+          {/* <button onClick={()=>modalref.current.focusclosebtn()}>focus close</button>
+          <button onClick={()=>modalref.current.focusyesbtn()}>focus yes</button>
+          <button onClick={()=>modalref.current.focusnobtn()}>focus no</button>
+            <Confirmationmodal ref={modalref} isOpen={open} onClose={()=>setopen(false)}></Confirmationmodal>
+          </> */ }
 
 
     </div>

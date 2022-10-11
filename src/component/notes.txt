@@ -964,4 +964,27 @@ vid 76 - custom hook - useinput Hook:
     what our custom hook is goint to do is to encapsulate the behaviour of the input field's onchange event and value={statevar} mapping
     newfile: /component/customhooks/useinput.js
 ``!!!!!!!! mine is not working yet to debug why !!!!!!!!!!``
- 
+
+video from webdev simplified -- Use LayoutEffect hook:
+      uselayouteffect and useffect are similar interms of declaring whereas the key difference is:
+            useffect performs things in the background and tends to make changes upto date in  view with less time ie it is async in behaviour
+            the uselayouteffect is not async in behaviour.
+            uselayouteffect run synchronously runs between the logic part(say counter updation usecase) and (painting the count value in the screen)UI updation.
+            uselayouteffect is preferred to the usecases where the elements are meant to be moved out in the referred Layout. visible changes of element in ui prefer the uselayouteffect
+            incase of ambiguity between choosing useeffect and uselayouteffect..try to proceed with useeffect first as it is async in nature makes it more performance friendly if it doesn't work then opt for the uselayouteffect
+            uselayouteffect takes 2 parameters: the arrow/callback function with our logic and other parameters is the dependencies array of state variables
+            when you doing measurement related logics/style manipulation of one element based on other element then we have to opt for the uselayouteffect
+            newfile: layouteffect.js
+            it is possible if we could slow down and observe that while using useeffect which run after each render.. we can see that the popup content was first near to the button then placed down with 25px increment statement
+            but whenever we use the uselayouteffectthen we could observ that the popup content wasdirectly displayed way below by implicitly executing +25PX statement
+
+    
+Video from webdev simplified --useimperative handle hook:
+    useimperative handle hook takes three parameter : one is the ref,second is the function that has logic to which the element that ref need to work with , third is the array of dependencies
+    useimperative handles are mostly used to override and make a custom ref with user's own logic rather than pointing to a single/more dom nodes alone
+    assume we hava modal that has three buttons yes,no,close -- we gonna create focus button in app.js which are meant to focus on those button on apprx click using refs and useimperative hooks
+    newfile:confirmationmodal.js,app.js
+
+
+
+usedebugvalue hook : it is mainly used to make a label of a thing that returned from the custom hook that we've created.
